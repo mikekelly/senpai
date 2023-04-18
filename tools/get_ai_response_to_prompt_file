@@ -1,0 +1,42 @@
+#!/usr/bin/env python
+
+import sys
+import pathlib
+import argparse
+
+from dotenv import load_dotenv
+
+senpai_directory = str(pathlib.Path(__file__).parent.parent.resolve()) + "/senpai"
+sys.path.append(senpai_directory)
+
+import openai
+import config
+
+load_dotenv()
+
+openai.api_key = config.OPENAI_API_KEY
+
+parser = argparse.ArgumentParser(description="A CLI tool outputs an AI response to a given prompt.")
+
+parser.add_argument("prompt_file_path", type=str, help="The path to the prompt file you want a response to.")
+
+args = parser.parse_args()
+
+prompt_file_path = args.prompt_file_path
+
+with open(prompt_file_path, 'r') as file:
+    prompt = file.read()
+
+prompt_object = { "role": "user", "content": prompt }
+
+response = openai.ChatCompletion.create(
+    model=config.FAST_OPENAI_MODEL,
+    messages=[prompt_object],
+    temperature=0, #TODO: make configurable via argument
+    max_tokens=1500, # TODO: make this token_limit_for_model - prompt_tokens - token_safety_buffer
+    n=1,
+)
+
+ai_response_text = response.choices[0].message.content.strip()
+
+print(ai_response_text)

@@ -1,0 +1,37 @@
+#!/usr/bin/env python
+
+import os
+import sys
+from serpapi import GoogleSearch
+from dotenv import load_dotenv
+
+load_dotenv()
+
+GOOGLE_LOCATION=os.getenv("GOOGLE_LOCATION")
+GOOGLE_LANGUAGE_CODE=os.getenv("GOOGLE_LANGUAGE_CODE")
+GOOGLE_COUNTRY_CODE=os.getenv("GOOGLE_COUNTRY_CODE")
+SERP_API_KEY=os.getenv("SERP_API_KEY")
+
+
+def get_serp_query_result(query: str, n: int = 5, engine: str = 'GoogleSearch') -> list:
+    search = []
+
+    if engine == 'GoogleSearch':
+        params = {
+            "q": query,
+            "location": GOOGLE_LOCATION,
+            "hl": GOOGLE_LANGUAGE_CODE,
+            "gl": GOOGLE_COUNTRY_CODE,
+            "google_domain": "google.com",
+            "api_key": SERP_API_KEY
+        }
+        response = GoogleSearch(params)
+        # TODO check for error json
+        search = response.get_dict()["organic_results"]
+        search = [[result["title"], result["snippet"], result["link"]] if "snippet" in result.keys() else [] for result in search[:n+1 if len(search) >= n else len(search)]]
+
+    return search
+
+query = sys.argv[1]
+result = get_serp_query_result(query)
+print(result)

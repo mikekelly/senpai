@@ -1,0 +1,19 @@
+#!/usr/bin/env python
+
+import pathlib
+import sys
+import subprocess
+
+senpai_directory = str(pathlib.Path(__file__).parent.parent.resolve()) + "/senpai"
+sys.path.append(senpai_directory)
+
+import web
+
+question = sys.argv[1]
+url = sys.argv[2]
+
+page_text = subprocess.check_output(f"tools/fetch_webpage_text {url}", shell=True, encoding="utf8")
+
+answer = web.commit_to_memory_and_answer_question_about_page_text(url, page_text, question)
+
+print(answer)

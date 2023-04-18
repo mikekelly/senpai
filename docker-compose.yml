@@ -1,0 +1,11 @@
+version: "3.9"
+
+services:
+  cortex:
+    build: ./
+    volumes:
+      - "./:/app"
+    profiles: ["exclude-from-up"] # Use `docker-compose run cortex` to get an attached container
+
+  # redis-stack:
+  #   image: "redis/redis-stack:latest"

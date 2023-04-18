@@ -1,0 +1,4 @@
+#!/bin/bash
+# TODO: Checks for running docker, docker-compose, .env created, etc.
+
+docker-compose run --rm cortex

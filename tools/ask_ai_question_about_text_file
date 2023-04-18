@@ -1,0 +1,36 @@
+#!/usr/bin/env python
+
+import os
+import sys
+import subprocess
+import argparse
+import tempfile
+
+parser = argparse.ArgumentParser(description="A CLI tool that asks an AI a question about some given text.")
+
+parser.add_argument("question", type=str, help="The question you are asking.")
+parser.add_argument("text_file_path", type=str, help="The path of the text file that the question is about.")
+
+args = parser.parse_args()
+
+question = args.question
+# TODO: enforce token limit test on text
+text_file_path = args.text_file_path
+
+with open(text_file_path, 'r') as file:
+    text = file.read()
+
+prompt = f"""{text}
+
+Using the above text, answer the following question:
+
+{question}
+"""
+
+with tempfile.NamedTemporaryFile(delete=False) as temp_file:
+    temp_file.write(prompt.encode("utf-8"))
+    temp_file_path = os.path.abspath(temp_file.name)
+    temp_file.close()
+    ai_response_to_prompt = subprocess.check_output(f"tools/get_ai_response_to_prompt_file \"{temp_file_path}\"", shell=True, encoding="utf8")
+
+print(ai_response_to_prompt)

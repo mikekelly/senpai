@@ -1,0 +1,17 @@
+#!/usr/bin/env python
+
+import pathlib
+import sys
+import subprocess
+
+senpai_directory = str(pathlib.Path(__file__).parent.parent.resolve()) + "/senpai"
+sys.path.append(senpai_directory)
+
+import memory
+import config
+from agent import Agent
+
+agent = Agent()
+initial_objective = sys.argv[1]
+
+agent.give_objective(initial_objective)
