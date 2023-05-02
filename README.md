@@ -28,5 +28,6 @@ installed on your system.
 * `./bash-shell` will give you a bash shell in a container
 
 ## TODO
+* Make tool search/listing dynamic, not hardcoded in prompt
 * When looking for an answer from a webpage, consider following relevant links
 * Make memory more sophisticated
